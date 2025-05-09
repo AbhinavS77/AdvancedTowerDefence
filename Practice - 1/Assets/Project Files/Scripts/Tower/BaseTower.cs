@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BaseTower : MonoBehaviour
 {
+	#region Variables
 	/// <summary>
 	/// The part of the tower that rotates to aim.
 	/// </summary>
@@ -11,27 +12,29 @@ public class BaseTower : MonoBehaviour
 	/// The bullet prefab that the tower will instantiate when firing.
 	/// </summary>
 	[SerializeField] private GameObject BulletPrefab;
+	#endregion
+	#region Start
+	void Start()
+	{
+		if (RotatingGun == null)
+		{
+			RotatingGun = transform.GetChild(0);
+			MyLogger.Log("Gun Assigned!");
+		}
+	}
+	#endregion
+	#region Update
+	void Update()
+	{
+		//float q = Quaternion.Angle(transform.rotation, RotatingGun.rotation);
+		////Vector3 v = q.eulerAngles;
+		//MyLogger.Log(q);
+		//transform.eulerAngles = new Vector3(q, q, q);
+		//transform.rotation = Quaternion.Euler(q, q, q);
+		//Quaternion nq = new Quaternion(0,0, 0, 0);
+		//transform.eulerAngles = new Quaternion(0,0,0,0).eulerAngles;
 
-    private GameObject TowerPrefab;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        if (RotatingGun == null)
-        {
-            RotatingGun = this.transform.GetChild(0);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(RotatingGun != null)
-        {
-            Debug.Log("Done");
-        }
-    }
-    public BaseTower()
-    {
-        RotatingGun = null;
-    }
+		RotatingGun.Rotate(Vector3.up * 90 * Time.deltaTime);
+	}
+	#endregion
 }

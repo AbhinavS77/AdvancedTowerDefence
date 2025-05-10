@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class BaseTower : MonoBehaviour
 {
@@ -6,35 +8,72 @@ public class BaseTower : MonoBehaviour
 	/// <summary>
 	/// The part of the tower that rotates to aim.
 	/// </summary>
-	[SerializeField] private Transform RotatingGun;
+	[SerializeField] private Transform rotatingGun;
 
 	/// <summary>
 	/// The bullet prefab that the tower will instantiate when firing.
 	/// </summary>
 	[SerializeField] private GameObject BulletPrefab;
+
+	/// <summary>
+	/// This is the enemy Transform.
+	/// </summary>
+	[SerializeField] private Transform target;
+
+	[Header("Target facing speed")]
+	[SerializeField] private float rotationSpeed = 10f;
+
+	[Header("Clamp Angle")]
+	[SerializeField] private float clampAngle = 120f;
 	#endregion
 	#region Start
 	void Start()
 	{
-		if (RotatingGun == null)
+		if (rotatingGun == null)
 		{
-			RotatingGun = transform.GetChild(0);
+			rotatingGun = transform.GetChild(0);
 			MyLogger.Log("Gun Assigned!");
+		}
+		if (target == null)
+		{
+			target = GameObject.FindWithTag("target").transform;
 		}
 	}
 	#endregion
-	#region Update
 	void Update()
 	{
-		//float q = Quaternion.Angle(transform.rotation, RotatingGun.rotation);
-		////Vector3 v = q.eulerAngles;
-		//MyLogger.Log(q);
-		//transform.eulerAngles = new Vector3(q, q, q);
-		//transform.rotation = Quaternion.Euler(q, q, q);
-		//Quaternion nq = new Quaternion(0,0, 0, 0);
-		//transform.eulerAngles = new Quaternion(0,0,0,0).eulerAngles;
+		FaceTarget();
+	}
+	#region FaceTarget
+	private void FaceTarget()
+	{
+		Quaternion targetRotation = Quaternion.LookRotation(target.position - rotatingGun.position);
+		targetRotation *= Quaternion.Euler(0f, 90f, 0f);
+		//Clamp
+		Vector3 eulerAngle = targetRotation.eulerAngles;
+		for (int i = 0; i < 3; i++)
+		{
+			if (eulerAngle[i] > 180f)
+			{
+				eulerAngle[i] -= 360f;
+			}
+			eulerAngle[i] = Mathf.Clamp(eulerAngle[i], -clampAngle, clampAngle);
+		}
 
-		RotatingGun.Rotate(Vector3.up * 90 * Time.deltaTime);
+		targetRotation = Quaternion.Euler(eulerAngle);
+
+		rotatingGun.rotation = Quaternion.Lerp(rotatingGun.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+		float angle = Quaternion.Angle(rotatingGun.rotation, targetRotation);
+
+		if (angle < 0.3f)
+		{
+			MyLogger.Log("Yes");
+		}
+		else
+		{
+			MyLogger.Log("No");
+		}
 	}
 	#endregion
 }

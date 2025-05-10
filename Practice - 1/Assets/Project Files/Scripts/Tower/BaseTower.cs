@@ -32,7 +32,6 @@ public class BaseTower : MonoBehaviour
 		if (rotatingGun == null)
 		{
 			rotatingGun = transform.GetChild(0);
-			MyLogger.Log("Gun Assigned!");
 		}
 		if (target == null)
 		{
@@ -43,6 +42,7 @@ public class BaseTower : MonoBehaviour
 	void Update()
 	{
 		FaceTarget();
+		Movement();
 	}
 	#region FaceTarget
 	private void FaceTarget()
@@ -68,12 +68,16 @@ public class BaseTower : MonoBehaviour
 
 		if (angle < 0.3f)
 		{
-			MyLogger.Log("Yes");
 		}
 		else
 		{
-			MyLogger.Log("No");
 		}
+	}
+	#endregion
+	#region Movement
+	private void Movement()
+	{
+		
 	}
 	#endregion
 }

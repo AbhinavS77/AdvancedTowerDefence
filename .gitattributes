@@ -1,2 +1,12 @@
+# Ignore Unity auto-generated files
 *.shader linguist-detectable=false
 *.cginc linguist-detectable=false
+*.meta linguist-detectable=false
+*.dll linguist-detectable=false
+*.so linguist-detectable=false
+*.a linguist-detectable=false
+*.jar linguist-detectable=false
+*.pdb linguist-detectable=false
+*.mdb linguist-detectable=false
+*.mmdb linguist-detectable=false
+*.m linguist-detectable=false  # Removes Mathematica or Objective-C confusion
